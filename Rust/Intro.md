@@ -136,6 +136,14 @@ For types which doesn't implement Display and Debug we need to implement these t
 
  All types can derive (automatically create) the `fmt::Debug` implementation. This is not true for `fmt::Display` which must be manually implemented.
 
+```
+> Display
+Accessed via {} in formatting macros like println! or format!.
+
+> Debug
+Accessed via {:?} or {:#?} (pretty-print) in formatting macros.
+```
+
  ```rust
 #[derive(Debug)]
 struct Person<'a> {
@@ -162,18 +170,23 @@ Person {
 For `Display` we need to manually implement
 ```rust
 use std::fmt;
+use std::fmt::Display;
 
-struct Point {
-    x: i32,
-    y: i32,
+/// Person struct
+#[derive(Debug)]
+struct Person {
+    name: String,
+    age: i32,
 }
 
-impl fmt::Display for Point {
+impl Display for Person {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "({}, {})", self.x, self.y)
+        write!(f, "{}, {}", self.name, self.age)
     }
 }
 
-let origin = Point { x: 0, y: 0 };
-assert_eq!(format!("The origin is: {origin}"), "The origin is: (0, 0)");
+fn main() {
+    let person = Person { name: "Satyam".to_owned(), age: 18 };
+    println!("{}", person);
+}
 ```
