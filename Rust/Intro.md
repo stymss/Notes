@@ -121,7 +121,7 @@ These types implement `Display` by default.
     > str and String: Display the string’s content directly.
 ```
 
-Compound Types like Structure, Enums, Options, Result, etc.. these types should implement Display independently.
+Compound Types like Structure, Enums, Options, Result, etc.. these types should implement Display manually.
 
 ```rust
 fmt::Debug: Uses the {:?} marker. Format text for debugging purposes.
@@ -137,8 +137,26 @@ For types which doesn't implement Display and Debug we need to implement these t
  All types can derive (automatically create) the `fmt::Debug` implementation. This is not true for `fmt::Display` which must be manually implemented.
 
  ```rust
- #[derive(Debug)]
-struct DebugPrintable(i32);
+#[derive(Debug)]
+struct Person<'a> {
+    name: &'a str,
+    age: u8
+}
+
+fn main() {
+    let name = "Peter";
+    let age = 27;
+    let peter = Person { name, age };
+
+    // Pretty print
+    println!("{:#?}", peter);
+}
+
+Output -> 
+Person {
+    name: "Peter",
+    age: 27,
+}
 ```
 
 For `Display` we need to manually implement
@@ -151,7 +169,7 @@ struct Point {
 }
 
 impl fmt::Display for Point {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "({}, {})", self.x, self.y)
     }
 }
