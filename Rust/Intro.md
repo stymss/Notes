@@ -6,7 +6,7 @@ Rust is a systems programming language focused on speed, memory safety, and para
 
 ### Basics of Rust Syntax
 
-#### 1.  **Creating Rust Project**
+#### **Creating Rust Project**
 
 To create Rust project, we can use `cargo new project_name`.
 
@@ -34,7 +34,7 @@ rust_project/
 
 --- 
 
-#### 2.  **Compiling and Running Code**
+#### **Compiling and Running Code**
 
 To compile Rust Code, we can use `rustc program_name.rs`.
 
@@ -59,7 +59,7 @@ $ cargo run # Execute the compiled code
 
 ---
 
-#### 3. **Comments**
+#### **Comments**
    - **Single-line Comments**: Single-line comments are created using two forward slashes (`//`).
      ```rust
      // This is a single-line comment
@@ -80,7 +80,7 @@ $ cargo run # Execute the compiled code
 
 ---
 
-#### 4. **General Print Syntax**
+#### **General Print Syntax**
 
 To print something to the console, we can use `println!()` macro
 
@@ -96,5 +96,66 @@ let name = "Satyam";
 println!("Hello, {}!", name); // Output: Hello, Satyam!
 ```
 
+We can also use `Positional Arguments`.
+```rust
+println!("{0}, this is {1}. {1}, this is {0}", "Alice", "Bob");
+```
+
+We can have named arguments
+```rust
+println!("{subject} {verb} {object}",
+             object="the lazy dog",
+             subject="the quick brown fox",
+             verb="jumps over");
+```
+
+We can only use this way of printing with types that implement `Display`,
+
+These types implement `Display` by default.
+
+```Built-in Types
+> Numerics: Integers (i8, u8, i32, etc.) and floating points (f32, f64) display as their numeric values.
+> Booleans: true or false.
+> Characters (char): Displays the character literal, e.g., 'a'.
+> String Types
+    > str and String: Display the string’s content directly.
+```
+
+Compound Types like Structure, Enums, Options, Result, etc.. these types should implement Display independently.
+
+```rust
+fmt::Debug: Uses the {:?} marker. Format text for debugging purposes.
+fmt::Display: Uses the {} marker. Format text in a more elegant, user friendly fashion.
+```
+
+For types which doesn't implement Display and Debug we need to implement these ttraits for those types.
+
 ---
 
+#### **Debug/Display**
+
+ All types can derive (automatically create) the `fmt::Debug` implementation. This is not true for `fmt::Display` which must be manually implemented.
+
+ ```rust
+ #[derive(Debug)]
+struct DebugPrintable(i32);
+```
+
+For `Display` we need to manually implement
+```rust
+use std::fmt;
+
+struct Point {
+    x: i32,
+    y: i32,
+}
+
+impl fmt::Display for Point {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "({}, {})", self.x, self.y)
+    }
+}
+
+let origin = Point { x: 0, y: 0 };
+assert_eq!(format!("The origin is: {origin}"), "The origin is: (0, 0)");
+```
